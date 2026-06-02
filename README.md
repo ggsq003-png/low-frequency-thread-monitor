@@ -6,6 +6,8 @@ A lightweight Codex skill for keeping ordinary, non-Goal controller windows movi
 
 It helps a controller window monitor workers with low-context, ETA-aware checks, without repeatedly reading long transcripts or closing the monitor before the worker reaches a terminal state.
 
+During monitoring, it reads only the smallest recent status needed to decide whether the worker is still running, done, failed, blocked, or asking for input. It reads final reports, named artifacts, and broader context only after a terminal state is visible.
+
 ## Why This Exists
 
 When you run Codex with controller / worker / reviewer windows, ordinary windows can struggle with background work:
@@ -25,7 +27,7 @@ It complements Goal mode; it is not a replacement for durable Goal workflows. Th
 - Uses ETA-aware next checks instead of a fixed "wait 5 minutes" rule.
 - Checks in 1-3 minutes when the worker appears near the final report.
 - Avoids nudging or interrupting a running worker.
-- Reads only recent status while monitoring.
+- Reads only the smallest recent status while monitoring; fuller reads happen after terminal state.
 - Separates self-report, review, absorption, approval, and routing.
 
 ## How It Is Different
@@ -127,7 +129,7 @@ The monitor should not close, archive, mark complete, or replace itself just bec
 
 这个 Codex Skill 用于不启用 Goal 的普通窗口。
 
-它让主控窗口在后台 worker 运行时保持低成本自主巡检：少读、少污染上下文、不打断 worker，并按预计完成时间设置下一次检查。
+它让主控窗口在后台 worker 运行时保持低成本自主巡检：只读最少状态、少污染上下文、不打断 worker，并按预计完成时间设置下一次检查。只有看到完成、失败、阻塞或等待你输入后，才读取最终报告和必要材料。
 
 适合多窗口工作流：主控 / worker / reviewer、有限写入、自检、复审、吸收、路由等场景。
 
