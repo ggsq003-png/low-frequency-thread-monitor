@@ -8,6 +8,8 @@ It helps a controller window monitor workers with low-context, ETA-aware checks,
 
 During monitoring, it reads only the smallest recent status needed to decide whether the worker is still running, done, failed, blocked, or asking for input. It reads final reports, named artifacts, and broader context only after a terminal state is visible.
 
+It is designed to trigger when a controller reads or checks another Codex conversation thread/window, including status text such as "已读取对话线程", "读取对话线程", `read_thread`, or `list_threads`.
+
 ## Why This Exists
 
 When you run Codex with controller / worker / reviewer windows, ordinary windows can struggle with background work:
@@ -106,6 +108,12 @@ Ask Codex to use the skill when monitoring a worker thread:
 Use low-frequency-thread-monitor to watch this background worker. Keep the monitor active, avoid interrupting the worker, and schedule ETA-aware checks until a final report, blocker, failure, or Owner-input request appears.
 ```
 
+For a main controller, you can make this the default behavior:
+
+```text
+When I read or check another Codex conversation thread/window, automatically apply low-frequency-thread-monitor. Treat that read as one monitoring cycle, read only minimal recent status, and schedule the next ETA-aware check unless the worker has reached a terminal state.
+```
+
 ## Core Rule
 
 If the target thread is still running and a next check is scheduled, monitoring is not complete.
@@ -130,6 +138,8 @@ The monitor should not close, archive, mark complete, or replace itself just bec
 这个 Codex Skill 用于不启用 Goal 的普通窗口。
 
 它让主控窗口在后台 worker 运行时保持低成本自主巡检：只读最少状态、少污染上下文、不打断 worker，并按预计完成时间设置下一次检查。只有看到完成、失败、阻塞或等待你输入后，才读取最终报告和必要材料。
+
+当主控读取或检查另一个 Codex 对话线程/窗口时，例如出现“已读取对话线程”“读取对话线程”或 `read_thread`，可以默认套用这个 skill，不需要每次手动点名。
 
 适合多窗口工作流：主控 / worker / reviewer、有限写入、自检、复审、吸收、路由等场景。
 

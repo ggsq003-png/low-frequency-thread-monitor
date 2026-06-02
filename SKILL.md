@@ -1,6 +1,6 @@
 ---
 name: low-frequency-thread-monitor
-description: 低频巡检 Skill for ordinary non-Goal Codex controller windows that need active, ETA-aware monitoring of background worker/review/planning threads. Use to keep the monitor alive until a terminal state, reduce context pollution and token spend, avoid over-polling, minimize expected wasted waiting time, and decide the next allowed action only after a final report, failure, or blocker appears.
+description: 低频巡检 Skill for ordinary non-Goal Codex controller windows that need active, ETA-aware monitoring of background worker/review/planning threads. Use automatically when a controller reads, checks, or inspects another Codex conversation thread/window, including 已读取对话线程, 读取对话线程, read_thread, list_threads, or background thread status checks. Keeps monitoring active until a terminal state, reads minimal status, reduces context pollution and token spend, avoids over-polling, and minimizes wasted waiting time.
 ---
 
 # 低频巡检 Skill
@@ -12,6 +12,12 @@ Monitor a background Codex thread with minimal reads, no interruption, and low w
 This skill is monitoring only. It does not authorize writes, approvals, closure, gate unblocks, active promotion, or PROJECT_B consume/display changes.
 
 Use it for ordinary non-Goal controller windows that still need to keep background work moving. It complements Goal mode; it does not replace durable Goal workflows.
+
+## Auto Trigger
+
+When a controller reads, checks, or inspects another Codex conversation thread/window, treat that action as a monitoring cycle and apply this skill even if the Owner did not repeat the skill name.
+
+Trigger hints include: "已读取对话线程", "读取对话线程", `read_thread`, `list_threads`, "read/check worker thread", or "check background window".
 
 ## State Model
 
