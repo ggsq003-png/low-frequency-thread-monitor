@@ -1,5 +1,7 @@
 # Low Frequency Thread Monitor
 
+[![skills.sh](https://skills.sh/b/ggsq003-png/low-frequency-thread-monitor)](https://skills.sh/ggsq003-png/low-frequency-thread-monitor)
+
 A lightweight Codex skill for keeping ordinary, non-Goal controller windows moving while background worker threads run.
 
 It helps a controller window monitor workers with low-context, ETA-aware checks, without repeatedly reading long transcripts or closing the monitor before the worker reaches a terminal state.
