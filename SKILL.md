@@ -1,6 +1,6 @@
 ---
 name: low-frequency-thread-monitor
-description: 低频巡检 Skill for active, ETA-aware monitoring of background Codex threads. Use when a controller or coordinator needs to watch an existing worker/review/planning thread, keep the monitor alive until a terminal state, reduce context pollution and token spend, avoid over-polling, minimize expected wasted waiting time, and decide the next allowed action only after a final report, failure, or blocker appears.
+description: 低频巡检 Skill for ordinary non-Goal Codex controller windows that need active, ETA-aware monitoring of background worker/review/planning threads. Use to keep the monitor alive until a terminal state, reduce context pollution and token spend, avoid over-polling, minimize expected wasted waiting time, and decide the next allowed action only after a final report, failure, or blocker appears.
 ---
 
 # 低频巡检 Skill
@@ -11,6 +11,18 @@ Monitor a background Codex thread with minimal reads, no interruption, and low w
 
 This skill is monitoring only. It does not authorize writes, approvals, closure, gate unblocks, active promotion, or PROJECT_B consume/display changes.
 
+Use it for ordinary non-Goal controller windows that still need to keep background work moving. It complements Goal mode; it does not replace durable Goal workflows.
+
+## State Model
+
+Keep these states separate:
+
+- Foreground monitor state: the controller is active, waiting, checking, absorbing, blocked, or done.
+- Background worker state: the worker is running, finalizing, completed, failed, blocked, or asking Owner.
+- Governance state: self-report, review, absorption, approval, and routing are separate steps.
+
+Pending next check means the monitor is still active, even if no foreground text is being generated.
+
 ## Hard Rules
 
 1. If the target thread is still running and a next check is scheduled, the monitor is still active. Do not send a final answer that closes, archives, marks complete, abandons, or replaces the monitoring window.
@@ -20,6 +32,8 @@ This skill is monitoring only. It does not authorize writes, approvals, closure,
 5. Use `includeOutputs: true` only for failure diagnosis, a small cited final output, or an explicit Owner request.
 6. Stop polling only when a final report, failure, blocker, handoff, or Owner-input request is visible.
 7. After completion, read the final report seriously, then check named artifacts and governing fact files only as needed before recommending the next allowed action.
+
+If you dispatch the worker yourself, ask it for one final completion/failure report. Do not ask it to send routine progress updates unless the task boundary requires them.
 
 ## Non-Interruption
 
