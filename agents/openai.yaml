@@ -1,4 +1,4 @@
 interface:
   display_name: "低频巡检 Skill"
-  short_description: "主控读取/检查其他 Codex 线程时自动套用的 ETA 低频巡检协议。"
-  default_prompt: "使用低频巡检 Skill 监控后台 Codex 窗口；当主控读取或检查其他 Codex 对话线程时自动套用，只读取最少状态判断完成，并按预计完成时间设置下一次读取。"
+  short_description: "主控读取/检查其他 Codex 线程时自动套用的 ETA 低频巡检协议，带冷却间隔。"
+  default_prompt: "使用低频巡检 Skill 监控后台 Codex 窗口；当主控读取或检查其他 Codex 对话线程时自动套用，只读取最少状态判断完成，并按预计完成时间设置下一次读取；未到下一次巡检时间前不要重复读取同一线程。"

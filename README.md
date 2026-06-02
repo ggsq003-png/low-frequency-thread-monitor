@@ -10,6 +10,8 @@ During monitoring, it reads only the smallest recent status needed to decide whe
 
 It is designed to trigger when a controller reads or checks another Codex conversation thread/window, including status text such as "已读取对话线程", "读取对话线程", `read_thread`, or `list_threads`.
 
+It also has a cooldown rule: after a non-terminal read, the monitor must set the next check time and stop reading that target thread until the scheduled time arrives. Re-reading the same still-running thread after only 10-30 seconds is not allowed.
+
 ## Why This Exists
 
 When you run Codex with controller / worker / reviewer windows, ordinary windows can struggle with background work:
@@ -30,6 +32,7 @@ It complements Goal mode; it is not a replacement for durable Goal workflows. Th
 - Checks in 1-3 minutes when the worker appears near the final report.
 - Avoids nudging or interrupting a running worker.
 - Reads only the smallest recent status while monitoring; fuller reads happen after terminal state.
+- Enforces a cooldown after non-terminal reads so the controller does not repeatedly re-open the same running thread.
 - Separates self-report, review, absorption, approval, and routing.
 
 ## How It Is Different
@@ -120,6 +123,8 @@ If the target thread is still running and a next check is scheduled, monitoring 
 
 The monitor should not close, archive, mark complete, or replace itself just because the worker has not finished yet.
 
+If the target thread is still running, the monitor should not read it again before the scheduled next check time. One monitoring cycle is one minimal read, then waiting.
+
 ## Timing Cheat Sheet
 
 | Latest evidence | Next check |
@@ -140,6 +145,8 @@ The monitor should not close, archive, mark complete, or replace itself just bec
 它让主控窗口在后台 worker 运行时保持低成本自主巡检：只读最少状态、少污染上下文、不打断 worker，并按预计完成时间设置下一次检查。只有看到完成、失败、阻塞或等待你输入后，才读取最终报告和必要材料。
 
 当主控读取或检查另一个 Codex 对话线程/窗口时，例如出现“已读取对话线程”“读取对话线程”或 `read_thread`，可以默认套用这个 skill，不需要每次手动点名。
+
+如果读完发现目标窗口还没完成，必须设置下一次巡检时间并停止继续读取；不能十几秒后又反复读取同一个还在运行的窗口。
 
 适合多窗口工作流：主控 / worker / reviewer、有限写入、自检、复审、吸收、路由等场景。
 
